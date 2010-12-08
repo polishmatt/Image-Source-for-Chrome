@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>Image Source - Options</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	
+<script type="text/javascript">
+
+function save_options() {
+	var check = document.getElementById("Tineye");
+	chrome.extension.sendRequest({action:"setTineye",value:check.checked});
+	
+	window.close();
+}
+
+function restore_options() {
+	value = localStorage["Tineye"];
+	if(value === undefined) value = "false";
+		
+	var check = document.getElementById("Tineye");
+	if(value == 'true') check.checked = true;
+}
+
+</script>
+</head>
+
+<body onload="restore_options()">
+
+Default to a TinEye search
+<input type="checkbox" id="Tineye"><br><br>
+
+<input type="button" onclick="save_options()" value="Save">
+
+</body>
+</html>

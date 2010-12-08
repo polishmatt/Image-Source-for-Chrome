@@ -1,0 +1,86 @@
+<html>
+<head>
+<script>
+
+function clone(obj){
+  var newObj = (obj instanceof Array) ? [] : {};
+  for (var i in obj) {
+    if (obj[i] && typeof obj[i] == "object") 
+      newObj[i] = clone(obj[i]);
+    else
+      newObj[i] = obj[i];
+  }
+  return newObj;
+}
+
+  var urlPatterns = [
+		'http://*.static.flickr.com/*/*_*',
+		'http://*.ak.fbcdn.net/*/*/*_*_*',
+		'http://img.ffffound.com/static-data/assets/*/*_*',
+		'http://ssssave.com/store/img/*/*_*',
+		'http://svpply.s3.amazonaws.com/*/*.*'
+  ];
+  var properties = {
+	"title": "View Source",
+	"contexts": ['image'],
+	"onclick": function(info, tab) {
+		patterns = [
+			{
+				url: "http://www.flickr.com/photo.gne?id=", 
+				pattern: "^http:\/\/.*?\.?static.flickr.com\/.*?\/(.*?)_.*?"
+			},
+			{
+				url: "http://www.facebook.com/photo.php?fbid=",
+				pattern: "^http:\/\/.*?.ak.fbcdn.net\/.*?\/.*?\/.*?_(.*?)_.*?"
+			},
+			{
+				url: "http://ffffound.com/image/", 
+				pattern: "^http:\/\/img.ffffound.com\/static-data\/assets\/.*?\/(.*?)_.*?"
+			},
+			{
+				url: "http://ssssave.com/image/", 
+				pattern: "^http:\/\/ssssave.com\/store\/img\/.*?\/(.*?)_.*?"
+			},
+			{
+				url: "http://svpply.com/item/", 
+				pattern: "^http:\/\/svpply.s3.amazonaws.com\/.*?\/([0-9]+)\..*?"
+			}
+		];
+		
+		for(i in patterns) {
+			match = new RegExp(patterns[i].pattern).exec(info.srcUrl);
+			if(match && match[1]) {
+				chrome.tabs.create({"url":patterns[i].url+match[1]});
+				return;
+			}
+		}
+		
+		chrome.tabs.create({"url":"http://tineye.com/search?url="+info.srcUrl});
+	}
+  };
+  var context = null;
+  
+  function createContext() {
+	var p = clone(properties);
+	if(localStorage["Tineye"] != "true") {
+		p.targetUrlPatterns = urlPatterns;
+	}
+	context = chrome.contextMenus.create(p);
+  }
+  
+  createContext();
+  
+  chrome.extension.onRequest.addListener(
+	function(request, sender, sendResponse) {
+		switch(request.action){
+			case "setTineye":
+				localStorage["Tineye"] = request.value;
+				chrome.contextMenus.remove(context);
+				createContext();
+				break;
+		}
+  });
+  
+</script>
+</head>
+</html>
