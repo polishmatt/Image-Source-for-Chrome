@@ -18,8 +18,11 @@ function clone(obj){
 		'http://*.ak.fbcdn.net/*/*/*_*_*',
 		'http://img.ffffound.com/static-data/assets/*/*_*',
 		'http://ssssave.com/store/img/*/*_*',
-		'http://svpply.s3.amazonaws.com/*/*.*'
+		'http://svpply.s3.amazonaws.com/*/*.*',
+		'http://i.imgur.com/*.*',
+		'http://imgur.com/*.*'
   ];
+  
   var properties = {
 	"title": "View Source",
 	"contexts": ['image'],
@@ -44,6 +47,10 @@ function clone(obj){
 			{
 				url: "http://svpply.com/item/", 
 				pattern: "^http:\/\/svpply.s3.amazonaws.com\/.*?\/([0-9]+)\..*?"
+			},
+			{
+				url: "http://imgur.com/gallery/",
+				pattern: "^http:\/\/i?\.?imgur.com\/([a-zA-Z0-9]*)\.[a-z]+"
 			}
 		];
 		
@@ -58,6 +65,7 @@ function clone(obj){
 		chrome.tabs.create({"url":"http://tineye.com/search?url="+info.srcUrl});
 	}
   };
+  
   var context = null;
   
   function createContext() {
