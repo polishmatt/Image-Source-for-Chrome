@@ -16,7 +16,7 @@ function clone(obj){
   var urlPatterns = [
 		'http://*.static.flickr.com/*/*_*',
 		'http://*.ak.fbcdn.net/*/*/*_*_*',
-		'http://img.ffffound.com/static-data/assets/*/*_*',
+		'http://*.ffffound.com/static-data/assets/*/*_*',
 		'http://ssssave.com/store/img/*/*_*',
 		'http://svpply.s3.amazonaws.com/*/*.*',
 		'http://i.imgur.com/*.*',
@@ -38,7 +38,7 @@ function clone(obj){
 			},
 			{
 				url: "http://ffffound.com/image/", 
-				pattern: "^http:\/\/img.ffffound.com\/static-data\/assets\/.*?\/(.*?)_.*?"
+				pattern: "^http:\/\/.*?.ffffound.com\/static-data\/assets\/.*?\/(.*?)_.*?"
 			},
 			{
 				url: "http://ssssave.com/image/", 
