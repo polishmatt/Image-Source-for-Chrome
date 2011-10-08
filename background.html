@@ -62,7 +62,7 @@ function clone(obj){
 			}
 		}
 		
-		chrome.tabs.create({"url":"http://tineye.com/search?url="+info.srcUrl});
+		chrome.tabs.create({"url":"http://www.google.com/searchbyimage?image_url="+encodeURIComponent(info.srcUrl)});
 	}
   };
   
@@ -70,7 +70,7 @@ function clone(obj){
   
   function createContext() {
 	var p = clone(properties);
-	if(localStorage["Tineye"] != "true") {
+	if(localStorage["Google"] == "false") {
 		p.targetUrlPatterns = urlPatterns;
 	}
 	context = chrome.contextMenus.create(p);
@@ -81,8 +81,8 @@ function clone(obj){
   chrome.extension.onRequest.addListener(
 	function(request, sender, sendResponse) {
 		switch(request.action){
-			case "setTineye":
-				localStorage["Tineye"] = request.value;
+			case "setGoogle":
+				localStorage["Google"] = request.value;
 				chrome.contextMenus.remove(context);
 				createContext();
 				break;

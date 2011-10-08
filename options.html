@@ -7,18 +7,18 @@
 <script type="text/javascript">
 
 function save_options() {
-	var check = document.getElementById("Tineye");
-	chrome.extension.sendRequest({action:"setTineye",value:check.checked});
+	var check = document.getElementById("Google");
+	chrome.extension.sendRequest({action:"setGoogle", value:check.checked});
 	
 	window.close();
 }
 
 function restore_options() {
-	value = localStorage["Tineye"];
-	if(value === undefined) value = "false";
-		
-	var check = document.getElementById("Tineye");
-	if(value == 'true') check.checked = true;
+	value = localStorage["Google"];
+	if(value === undefined) value = "true";
+	
+	var check = document.getElementById("Google");
+	if(value != "false") check.checked = true;
 }
 
 </script>
@@ -26,8 +26,8 @@ function restore_options() {
 
 <body onload="restore_options()">
 
-Default to a TinEye search
-<input type="checkbox" id="Tineye"><br><br>
+Default to a Google search
+<input type="checkbox" id="Google"><br><br>
 
 <input type="button" onclick="save_options()" value="Save">
 
