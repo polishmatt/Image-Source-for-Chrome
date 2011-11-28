@@ -16,6 +16,7 @@ function clone(obj){
   var urlPatterns = [
 		'http://*.static.flickr.com/*/*_*',
 		'http://*.ak.fbcdn.net/*/*/*_*_*',
+		'http://upload.wikimedia.org/wikipedia/commons/*/*/*',
 		'http://*.ffffound.com/static-data/assets/*/*_*',
 		'http://ssssave.com/store/img/*/*_*',
 		'http://svpply.s3.amazonaws.com/*/*.*',
@@ -30,35 +31,48 @@ function clone(obj){
 		patterns = [
 			{
 				url: "http://www.flickr.com/photo.gne?id=", 
-				pattern: "^http:\/\/.*?\.?static.flickr.com\/.*?\/(.*?)_.*?"
+				pattern: "^http://.*?.?static.flickr.com/.*?/(.*?)_.*?",
+				url_pattern: "^http://www.flickr.com\/photos\/.*?\/[0-9]+(?:\/.*?)?"
 			},
 			{
 				url: "http://www.facebook.com/photo.php?fbid=",
-				pattern: "^http:\/\/.*?.ak.fbcdn.net\/.*?\/.*?\/.*?_(.*?)_.*?"
+				pattern: "^http://.*?.ak.fbcdn.net/.*?/(?:.*?/)?.*?_(.*?)_.*?",
+				url_pattern: "^http://www.facebook.com/photo.php\\?fbid=.+"
+			},
+			{
+				url: "http://en.wikipedia.org/wiki/File:",
+				pattern: "^http://upload.wikimedia.org/wikipedia/commons/thumb/.*?/.*?/(.*?)/.*?"
+			},
+			{
+				url: "http://en.wikipedia.org/wiki/File:",
+				pattern: "^http://upload.wikimedia.org/wikipedia/commons/.*?/.*?/(.*)"
 			},
 			{
 				url: "http://ffffound.com/image/", 
-				pattern: "^http:\/\/.*?.ffffound.com\/static-data\/assets\/.*?\/(.*?)_.*?"
+				pattern: "^http://.*?.ffffound.com/static-data/assets/.*?/(.*?)_.*?"
 			},
 			{
 				url: "http://ssssave.com/image/", 
-				pattern: "^http:\/\/ssssave.com\/store\/img\/.*?\/(.*?)_.*?"
+				pattern: "^http://ssssave.com/store/img/.*?/(.*?)_.*?"
 			},
 			{
 				url: "http://svpply.com/item/", 
-				pattern: "^http:\/\/svpply.s3.amazonaws.com\/.*?\/([0-9]+)\..*?"
+				pattern: "^http://assets.svpply.com.s3.amazonaws.com/.*?/(\\d+)..*?"
 			},
 			{
 				url: "http://imgur.com/gallery/",
-				pattern: "^http:\/\/i?\.?imgur.com\/([a-zA-Z0-9]*)\.[a-z]+"
+				pattern: "^http://i?.?imgur.com/([a-zA-Z0-9]*).[a-z]+"
 			}
 		];
 		
 		for(i in patterns) {
-			match = new RegExp(patterns[i].pattern).exec(info.srcUrl);
-			if(match && match[1]) {
-				chrome.tabs.create({"url":patterns[i].url+match[1]});
-				return;
+			pattern = patterns[i].url_pattern ? patterns[i].url_pattern : "^" + patterns[i].url + ".+";console.log(pattern);console.log(tab.url);console.log(new RegExp(pattern).exec(tab.url));
+			if(!new RegExp(pattern).exec(tab.url)) {
+				match = new RegExp(patterns[i].pattern).exec(info.srcUrl);
+				if(match && match[1]) {
+					chrome.tabs.create({"url":patterns[i].url+match[1]});
+					return;
+				}
 			}
 		}
 		
